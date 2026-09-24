@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>أبطال الوطن الصغار | ابتدائية داود بن عروة الثقفي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Readex+Pro:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Readex Pro', 'Tajawal', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #094726 0%, #0d6938 45%, #189851 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Floating & bouncing keyframes for young kids */
+    @keyframes bounce-gentle {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(74, 222, 128, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+
+    .bounce-gentle {
+      animation: bounce-gentle 2.5s infinite ease-in-out;
+    }
+
+    .wiggle-effect {
+      animation: wiggle 1.2s infinite ease-in-out;
+    }
+
+    .pulse-ring {
+      animation: pulse-ring 2s infinite;
+    }
+
+    /* 3D Card flip styling for memory game */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1.5rem;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .sparkle-bg {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 10%, transparent 11%);
+      background-size: 24px 24px;
+    }
+
+    /* Sound wave animation when speaking */
+    @keyframes sound-wave {
+      0%, 100% { height: 8px; }
+      50% { height: 26px; }
+    }
+    .wave-bar {
+      width: 4px;
+      background-color: #15803d;
+      border-radius: 9999px;
+      animation: sound-wave 0.8s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+  </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between p-3 sm:p-5 sparkle-bg min-h-screen">
+
+  <!-- Floating Audio Status Indicator -->
+  <div id="speakingIndicator" class="fixed top-2 left-1/2 -translate-x-1/2 z-50 bg-amber-400 border-2 border-amber-600 px-4 py-1.5 rounded-full shadow-2xl items-center gap-2 hidden transition-all">
+    <span class="text-xl">🗣️</span>
+    <span class="text-xs sm:text-sm font-black text-amber-950">المعلمة بهية تتحدث الآن...</span>
+    <div class="flex items-center gap-1 h-6">
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+      <div class="wave-bar"></div>
+    </div>
+  </div>
+
+  <!-- Top Navigation & Information Bar -->
+  <header class="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl p-3 sm:p-4 shadow-2xl border-4 border-emerald-400 mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-green-400 flex items-center justify-center text-3xl shadow-md border-2 border-white pulse-ring">
+        🇸🇦
+      </div>
+      <div>
+        <h1 class="text-base sm:text-xl font-black text-emerald-900 leading-tight">
+          الطفولة المبكرة | ابتدائية داود بن عروة الثقفي
+        </h1>
+        <p class="text-xs sm:text-sm font-bold text-emerald-700 flex items-center gap-1 mt-0.5">
+          <span>🌸</span>
+          <span>إشراف المعلمة المتميزة:</span>
+          <span class="text-amber-600 font-extrabold text-sm sm:text-base">بهية محمد شنيمر</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Stars & Voice Instructions Indicator -->
+    <div class="flex items-center gap-2">
+      <!-- Voice repeat button for kids -->
+      <button onclick="unlockAndSpeak()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 p-2.5 sm:px-4 sm:py-2 rounded-2xl font-black text-sm sm:text-base shadow-lg active:scale-95 transition-all flex items-center gap-2 border-2 border-amber-300 animate-pulse" title="استمع للصوت مجدداً">
+        <span class="text-2xl">🔊</span>
+        <span>استمع للصوت</span>
+      </button>
+
+      <!-- Stars Counter -->
+      <div class="bg-emerald-100 border-2 border-emerald-500 px-3.5 py-2 rounded-2xl flex items-center gap-1.5 shadow-inner">
+        <span class="text-2xl">⭐</span>
+        <span id="starCounter" class="text-xl sm:text-2xl font-black text-emerald-800">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Game Stage -->
+  <main class="w-full max-w-4xl mx-auto flex-1 flex flex-col justify-center items-center relative">
+
+    <!-- Screen 1: Welcome & Mission Selector -->
+    <section id="screen-welcome" class="w-full bg-white/95 rounded-3xl p-5 sm:p-8 shadow-2xl border-4 border-yellow-300 text-center flex flex-col items-center gap-5 transition-all">
+      <div class="text-6xl sm:text-7xl bounce-gentle mb-1">
+        🏰 🇸🇦 🌴
+      </div>
+      
+      <div class="space-y-1">
+        <h2 class="text-2xl sm:text-4xl font-black text-emerald-800">
+          أهلاً بأبطال الصف الأول!
+        </h2>
+        <p class="text-base sm:text-xl font-bold text-slate-600">
+          المس أي لعبة وطنية واكتشف مفاجآتها بالصوت والصورة
+        </p>
+      </div>
+
+      <!-- Prominent Audio Activation Banner for kids & teachers -->
+      <div class="w-full bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-200 border-4 border-amber-500 rounded-3xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-right">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl animate-bounce">📢</span>
+          <div>
+            <h3 class="font-black text-amber-950 text-base sm:text-lg">اضغط لسماع ترحيب وتوجيهات المعلمة بهية</h3>
+            <p class="text-xs sm:text-sm font-bold text-amber-900">لتفعيل الصوت في جهازك بكل وضوح وسهولة</p>
+          </div>
+        </div>
+        <button onclick="playGreetingVoice()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black text-base px-6 py-2.5 rounded-2xl shadow-md active:scale-95 flex items-center gap-2 border-2 border-white">
+          <span>🔊</span>
+          <span>شغّل الصوت الآن</span>
+        </button>
+      </div>
+
+      <!-- 3 Visual Game Cards (Zero reading needed!) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mt-2">
+        
+        <!-- Game 1: Collect & Count Palm Dates -->
+        <button onclick="startGame(1)" class="group bg-gradient-to-b from-amber-100 to-amber-200 border-4 border-amber-400 hover:border-amber-500 rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col items-center justify-center gap-3 transition-all transform hover:-translate-y-2 active:scale-95">
+          <div class="w-20 h-20 bg-amber-400/30 rounded-2xl flex items-center justify-center text-5xl group-hover:scale-110 transition-transform">
+            🌴
+          </div>
+          <span class="text-xl font-black text-amber-900">جَني التمور</span>
+          <div class="flex gap-1 text-2xl">
+            <span>🧺</span>
+            <span>✨</span>
+            <span>🥥</span>
+          </div>
+          <span class="bg-amber-500 text-white text-xs px-3 py-1 rounded-full font-bold">لعبة العد والأشكال</span>
+        </button>
+
+        <!-- Game 2: Match National Symbols -->
+        <button onclick="startGame(2)" class="group bg-gradient-to-b from-emerald-100 to-emerald-200 border-4 border-emerald-400 hover:border-emerald-500 rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col items-center justify-center gap-3 transition-all transform hover:-translate-y-2 active:scale-95">
+          <div class="w-20 h-20 bg-emerald-400/30 rounded-2xl flex items-center justify-center text-5xl group-hover:scale-110 transition-transform">
+            🇸🇦
+          </div>
+          <span class="text-xl font-black text-emerald-900">رموز الوطن</span>
+          <div class="flex gap-1 text-2xl">
+            <span>🦅</span>
+            <span>☕</span>
+            <span>🐪</span>
+          </div>
+          <span class="bg-emerald-600 text-white text-xs px-3 py-1 rounded-full font-bold">لعبة تطابق الصور</span>
+        </button>
+
+        <!-- Game 3: Saudi Green Initiative Planting -->
+        <button onclick="startGame(3)" class="group bg-gradient-to-b from-lime-100 to-lime-200 border-4 border-lime-400 hover:border-lime-500 rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col items-center justify-center gap-3 transition-all transform hover:-translate-y-2 active:scale-95">
+          <div class="w-20 h-20 bg-lime-400/30 rounded-2xl flex items-center justify-center text-5xl group-hover:scale-110 transition-transform">
+            🌱
+          </div>
+          <span class="text-xl font-black text-lime-900">السعودية الخضراء</span>
+          <div class="flex gap-1 text-2xl">
+            <span>💧</span>
+            <span>🌻</span>
+            <span>🌳</span>
+          </div>
+          <span class="bg-lime-600 text-white text-xs px-3 py-1 rounded-full font-bold">ازرع وطني الجميل</span>
+        </button>
+      </div>
+
+      <!-- Quick Audio Helper Button -->
+      <button onclick="playGreetingVoice()" class="mt-2 text-emerald-700 bg-emerald-100 hover:bg-emerald-200 font-extrabold px-6 py-2.5 rounded-full flex items-center gap-2 border border-emerald-300">
+        <span>📢</span>
+        <span>اضغط هنا لتسمع ترحيب المعلمة بهية</span>
+      </button>
+    </section>
+
+    <!-- Screen 2: Game 1 - Palm Harvest & Counting -->
+    <section id="screen-game-1" class="w-full bg-white/95 rounded-3xl p-4 sm:p-6 shadow-2xl border-4 border-amber-400 hidden flex flex-col items-center gap-4">
+      <div class="w-full flex items-center justify-between">
+        <button onclick="returnToHome()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-2xl font-black text-sm flex items-center gap-1 active:scale-95">
+          <span>🏠</span> <span>رجوع</span>
+        </button>
+        <!-- Visual Target Indicator (Big number + dots for non-readers) -->
+        <div class="bg-amber-100 border-2 border-amber-400 px-4 py-1.5 rounded-2xl flex items-center gap-2">
+          <span class="text-sm font-bold text-amber-900">المطلوب:</span>
+          <div id="targetDots" class="flex gap-1 text-xl"></div>
+          <span id="targetNumberText" class="text-2xl font-black text-amber-700 bg-white px-2.5 py-0.5 rounded-xl border border-amber-300">0</span>
+        </div>
+        <!-- Collected Counter -->
+        <div class="bg-emerald-100 border-2 border-emerald-400 px-4 py-1.5 rounded-2xl flex items-center gap-2">
+          <span class="text-sm font-bold text-emerald-900">في السلّة:</span>
+          <span id="harvestedCounter" class="text-2xl font-black text-emerald-800">0</span>
+          <span class="text-xl">🧺</span>
+        </div>
+      </div>
+
+      <!-- Tree & Interactive falling items playground -->
+      <div id="harvestCanvasContainer" class="w-full h-80 sm:h-96 bg-gradient-to-b from-sky-200 via-emerald-100 to-amber-100 rounded-3xl relative overflow-hidden border-4 border-amber-300 shadow-inner flex flex-col justify-end">
+        <!-- Sun and clouds decoration -->
+        <div class="absolute top-4 left-6 text-5xl animate-spin" style="animation-duration: 25s;">☀️</div>
+        <div class="absolute top-6 right-10 text-4xl opacity-80">☁️</div>
+        
+        <!-- Big Palm Tree SVG -->
+        <div class="absolute bottom-0 right-1/2 translate-x-1/2 text-center pointer-events-none">
+          <div class="text-8xl sm:text-9xl filter drop-shadow-lg">🌴</div>
+        </div>
+
+        <!-- Falling/Clickable Dates Container -->
+        <div id="datesArea" class="absolute inset-0 z-10">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Basket at the bottom -->
+        <div class="w-full bg-amber-800/20 border-t-2 border-amber-600/40 p-2 flex justify-center items-center gap-2 z-20 backdrop-blur-xs">
+          <span class="text-3xl">🧺</span>
+          <span class="font-bold text-amber-950 text-sm sm:text-base">المس التمرات اللذيذة لتجمعها في سلة الوطن!</span>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center">
+        <button onclick="speakInstruction1()" class="bg-amber-500 hover:bg-amber-600 text-white font-black text-lg px-8 py-3 rounded-2xl shadow-lg active:scale-95 flex items-center gap-2 pulse-ring">
+          <span class="text-2xl">🔊</span>
+          <span>اضغط هنا لتسمع المطلوب</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 3: Game 2 - National Symbols Memory/Matching -->
+    <section id="screen-game-2" class="w-full bg-white/95 rounded-3xl p-4 sm:p-6 shadow-2xl border-4 border-emerald-400 hidden flex flex-col items-center gap-4">
+      <div class="w-full flex items-center justify-between">
+        <button onclick="returnToHome()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-2xl font-black text-sm flex items-center gap-1 active:scale-95">
+          <span>🏠</span> <span>رجوع</span>
+        </button>
+        <div class="flex items-center gap-2 bg-emerald-100 border border-emerald-400 px-4 py-1.5 rounded-2xl">
+          <span class="text-base">🇸🇦</span>
+          <span class="font-black text-emerald-900 text-sm sm:text-base">تطابق رموز مملكتنا الغالية</span>
+        </div>
+        <button onclick="initMatchGame()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1">
+          <span>🔄</span> <span>إعادة</span>
+        </button>
+      </div>
+
+      <!-- 6 Big Match Cards (3 Pairs: Flag, Falcon, Coffee/Dallah) - Simple for First Graders -->
+      <div id="cardsGrid" class="grid grid-cols-3 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg aspect-square sm:aspect-auto my-2">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="w-full flex justify-center">
+        <button onclick="speakInstruction2()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg px-8 py-3 rounded-2xl shadow-lg active:scale-95 flex items-center gap-2 pulse-ring">
+          <span class="text-2xl">🔊</span>
+          <span>اضغط هنا لتسمع المطلوب</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 4: Game 3 - Saudi Green Initiative (Planting & Blooming) -->
+    <section id="screen-game-3" class="w-full bg-white/95 rounded-3xl p-4 sm:p-6 shadow-2xl border-4 border-lime-500 hidden flex flex-col items-center gap-4">
+      <div class="w-full flex items-center justify-between">
+        <button onclick="returnToHome()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-2xl font-black text-sm flex items-center gap-1 active:scale-95">
+          <span>🏠</span> <span>رجوع</span>
+        </button>
+        <div class="flex items-center gap-2 bg-lime-100 border border-lime-400 px-4 py-1.5 rounded-2xl">
+          <span class="text-xl">🌱</span>
+          <span class="font-black text-lime-900 text-sm sm:text-base">مبادرة السعودية الخضراء 2030</span>
+        </div>
+        <div class="bg-emerald-100 border border-emerald-400 px-3 py-1 rounded-xl text-emerald-800 font-extrabold text-sm flex items-center gap-1">
+          <span>🌿</span>
+          <span id="plantedCount">0</span>
+          <span>/ 8</span>
+        </div>
+      </div>
+
+      <!-- Interactive Garden Map where kids tap to make trees & flowers sprout -->
+      <div id="plantingGarden" class="w-full h-80 sm:h-96 bg-gradient-to-b from-amber-100 via-amber-200 to-emerald-200 rounded-3xl border-4 border-dashed border-emerald-500 relative overflow-hidden shadow-inner cursor-pointer flex flex-wrap items-center justify-center p-4">
+        
+        <!-- Big Saudi Map watermark / silhouette -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+          <span class="text-9xl font-black text-emerald-950">🇸🇦</span>
+        </div>
+
+        <!-- Instruction banner across garden -->
+        <div class="absolute top-3 bg-white/90 px-4 py-1.5 rounded-full border border-lime-400 shadow-sm text-xs sm:text-sm font-black text-emerald-800 z-10 flex items-center gap-2 pointer-events-none">
+          <span class="text-lg">👆</span>
+          <span>المس في أي مكان بالأرض لتزرع شجرة أو نخلة أو وردة!</span>
+        </div>
+
+        <!-- Target planting spots (8 visible glowing spots) -->
+        <div id="plantingSpotsGrid" class="grid grid-cols-4 gap-4 w-full h-full pt-10 pb-4 z-10">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center">
+        <button onclick="speakInstruction3()" class="bg-lime-600 hover:bg-lime-700 text-white font-black text-lg px-8 py-3 rounded-2xl shadow-lg active:scale-95 flex items-center gap-2 pulse-ring">
+          <span class="text-2xl">🔊</span>
+          <span>اضغط هنا لتسمع المطلوب</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 5: National Hero Certificate (Printable & Celebratory) -->
+    <div id="celebrationModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center border-8 border-amber-400 shadow-2xl relative animate-scale flex flex-col items-center gap-4">
+        
+        <div class="text-6xl sm:text-7xl bounce-gentle">
+          🏆
+        </div>
+
+        <div class="space-y-1">
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-4 py-1 rounded-full border border-emerald-400 inline-block">
+            وسام فخر الوطن 🇸🇦
+          </span>
+          <h3 class="text-2xl sm:text-3xl font-black text-emerald-900">
+            مُبارك يا بطل الصف الأول!
+          </h3>
+          <p class="text-sm sm:text-base font-bold text-slate-600">
+            لقد أبدعت وتميزت في حب وفداء وطننا الغالي
+          </p>
+        </div>
+
+        <!-- Certificate Card -->
+        <div class="w-full bg-gradient-to-r from-emerald-50 via-white to-emerald-50 border-4 border-double border-emerald-600 rounded-2xl p-4 text-emerald-950 space-y-2 text-right shadow-sm">
+          <div class="flex justify-between items-center border-b pb-2 border-emerald-200">
+            <span class="font-extrabold text-xs text-emerald-700">المملكة العربية السعودية</span>
+            <span class="font-black text-sm text-emerald-900">وزارة التعليم</span>
+          </div>
+          <div class="text-center py-2">
+            <p class="text-xs font-bold text-slate-500">تمنح هذه الشهادة المتميزة إلى:</p>
+            <p class="text-xl sm:text-2xl font-black text-emerald-800 mt-1">⭐ بطل الطفولة المبكرة المتميز ⭐</p>
+            <p class="text-xs sm:text-sm font-bold text-emerald-700 mt-1">ابتدائية داود بن عروة الثقفي</p>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-emerald-200 text-xs font-black">
+            <div>
+              <span class="text-slate-500">معلمة المادة:</span><br>
+              <span class="text-emerald-900 text-sm">بهية محمد شنيمر</span>
+            </div>
+            <div class="text-center">
+              <span class="text-amber-600 text-2xl">🎖️</span><br>
+              <span class="text-emerald-800">ختم التميز</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 w-full mt-2">
+          <button onclick="closeModalAndHome()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-2xl shadow-lg active:scale-95 text-base">
+            اللعب مرة ثانية 🎮
+          </button>
+          <button onclick="window.print()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 font-black px-5 py-3 rounded-2xl shadow-lg active:scale-95 flex items-center justify-center gap-1.5 text-base">
+            <span>🖨️</span> <span>طباعة</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer with National Pride & Teacher Dedication -->
+  <footer class="w-full max-w-4xl mx-auto mt-4 text-center">
+    <div class="bg-white/80 backdrop-blur-sm rounded-2xl py-2 px-4 shadow-md inline-flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-black text-emerald-950 border border-emerald-300">
+      <span>🇸🇦 نعتز بوطننا وديننا</span>
+      <span>•</span>
+      <span>الطفولة المبكرة - ابتدائية داود بن عروة الثقفي</span>
+      <span>•</span>
+      <span class="text-emerald-700">المعلمة: بهية محمد شنيمر</span>
+    </div>
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       1. GLOBAL STATE & AUDIO SYNTHESIZER
+       ========================================================================== */
+    const gameState = {
+      stars: 0,
+      currentScreen: 'screen-welcome',
+      game1Target: 4,
+      game1Current: 0,
+      matchedPairs: 0,
+      flippedCards: [],
+      isLockBoard: false,
+      plantedCount: 0,
+      cachedUtterance: null
+    };
+
+    // Web Audio Synthesizer for rich interactive audio without external audio files
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch (e) {
+        console.warn("AudioContext error:", e);
+      }
+      return audioCtx;
+    }
+
+    // Play pleasant cheerful notes
+    function playNote(frequency, type = 'sine', duration = 0.25, gainVal = 0.18) {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {
+        console.warn("Audio note not supported:", e);
+      }
+    }
+
+    // Happy success melody
+    function playSuccessChime() {
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, index) => {
+        setTimeout(() => {
+          playNote(freq, 'triangle', 0.35, 0.25);
+        }, index * 120);
+      });
+    }
+
+    // Star pop chime
+    function playPopChime() {
+      playNote(880, 'sine', 0.15, 0.3);
+    }
+
+    // Grand fanfare for certificate
+    function playFanfare() {
+      const notes = [440, 554.37, 659.25, 880, 880, 1108.73];
+      notes.forEach((freq, index) => {
+        setTimeout(() => {
+          playNote(freq, 'square', 0.35, 0.2);
+        }, index * 160);
+      });
+    }
+
+    // Show visual sound wave animation
+    function setSpeakingUI(isSpeaking) {
+      const indicator = document.getElementById('speakingIndicator');
+      if (isSpeaking) {
+        indicator.classList.remove('hidden');
+        indicator.classList.add('flex');
+      } else {
+        indicator.classList.add('hidden');
+        indicator.classList.remove('flex');
+      }
+    }
+
+    // Highly robust Arabic Speech Engine
+    function speakText(text) {
+      getAudioContext();
+
+      if (!('speechSynthesis' in window)) {
+        // Fallback tone if browser doesn't have TTS
+        playPopChime();
+        return;
+      }
+
+      try {
+        // Chromium bug fix: resume if paused
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA';
+        utterance.rate = 0.86; // clear and gentle for first graders
+        utterance.pitch = 1.1;
+
+        // Try picking an authentic Arabic voice
+        const voices = window.speechSynthesis.getVoices();
+        const arabicVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('ar')));
+        if (arabicVoice) {
+          utterance.voice = arabicVoice;
+        }
+
+        utterance.onstart = () => {
+          setSpeakingUI(true);
+        };
+
+        utterance.onend = () => {
+          setSpeakingUI(false);
+        };
+
+        utterance.onerror = (e) => {
+          console.warn("Speech error, playing cheerful note fallback:", e);
+          setSpeakingUI(false);
+          playPopChime();
+        };
+
+        // Retain reference in state to prevent garbage collection stopping speech
+        gameState.cachedUtterance = utterance;
+
+        // Play brief bell tone right as speech starts
+        playNote(587.33, 'sine', 0.2, 0.15);
+
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        console.error("SpeechSynthesis error:", err);
+        setSpeakingUI(false);
+      }
+    }
+
+    function unlockAndSpeak() {
+      getAudioContext();
+      if (window.speechSynthesis && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      speakCurrentInstruction();
+    }
+
+    function addStars(num) {
+      gameState.stars += num;
+      const starEl = document.getElementById('starCounter');
+      starEl.innerText = gameState.stars;
+      starEl.classList.add('scale-125', 'text-amber-500');
+      setTimeout(() => {
+        starEl.classList.remove('scale-125', 'text-amber-500');
+      }, 300);
+      playSuccessChime();
+    }
+
+    function showScreen(screenId) {
+      ['screen-welcome', 'screen-game-1', 'screen-game-2', 'screen-game-3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (id === screenId) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+      gameState.currentScreen = screenId;
+    }
+
+    function returnToHome() {
+      playPopChime();
+      showScreen('screen-welcome');
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      setSpeakingUI(false);
+    }
+
+    function speakCurrentInstruction() {
+      if (gameState.currentScreen === 'screen-welcome') {
+        playGreetingVoice();
+      } else if (gameState.currentScreen === 'screen-game-1') {
+        speakInstruction1();
+      } else if (gameState.currentScreen === 'screen-game-2') {
+        speakInstruction2();
+      } else if (gameState.currentScreen === 'screen-game-3') {
+        speakInstruction3();
+      }
+    }
+
+    function playGreetingVoice() {
+      getAudioContext();
+      speakText("مرحباً بكم يا أبطال الصف الأول في الطفولة المبكرة بابتدائية داود بن عروة الثقفي! معكم المعلمة بهية محمد شنيمر. اضغط على أي لعبة لنبدأ المرح والتعلم بحب وطننا الغالي!");
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#16a34a', '#22c55e', '#eab308', '#ffffff']
+        });
+      }
+    }
+
+    /* ==========================================================================
+       2. GAME 1: HARVEST & COUNTING PALM DATES (Visual counting with dots)
+       ========================================================================== */
+    function initHarvestGame() {
+      gameState.game1Target = Math.floor(Math.random() * 3) + 3; // 3, 4, or 5
+      gameState.game1Current = 0;
+
+      document.getElementById('targetNumberText').innerText = gameState.game1Target;
+      document.getElementById('harvestedCounter').innerText = "0";
+
+      const dotsContainer = document.getElementById('targetDots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < gameState.game1Target; i++) {
+        const dot = document.createElement('span');
+        dot.innerText = '🟡';
+        dotsContainer.appendChild(dot);
+      }
+
+      const datesArea = document.getElementById('datesArea');
+      datesArea.innerHTML = '';
+
+      const positions = [
+        { top: '15%', left: '30%' },
+        { top: '22%', left: '42%' },
+        { top: '18%', left: '55%' },
+        { top: '26%', left: '68%' },
+        { top: '35%', left: '25%' },
+        { top: '38%', left: '48%' },
+        { top: '32%', left: '72%' },
+        { top: '45%', left: '38%' }
+      ];
+
+      positions.forEach((pos) => {
+        const dateBtn = document.createElement('button');
+        dateBtn.className = 'absolute text-4xl sm:text-5xl transform hover:scale-125 active:scale-90 transition-all filter drop-shadow-md wiggle-effect cursor-pointer';
+        dateBtn.style.top = pos.top;
+        dateBtn.style.left = pos.left;
+        dateBtn.innerHTML = '🥥';
+
+        dateBtn.onclick = (e) => {
+          collectDate(dateBtn, e);
+        };
+
+        datesArea.appendChild(dateBtn);
+      });
+
+      // Speak instruction automatically after a slight delay
+      setTimeout(speakInstruction1, 300);
+    }
+
+    function speakInstruction1() {
+      speakText(`يا بطل! المس التمرات اللذيذة لتجمع في السلة ${gameState.game1Target} تمرات!`);
+    }
+
+    function collectDate(buttonEl, event) {
+      if (gameState.game1Current >= gameState.game1Target) return;
+
+      playPopChime();
+      buttonEl.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      buttonEl.style.transform = 'translateY(150px) scale(0)';
+      buttonEl.style.opacity = '0';
+      buttonEl.disabled = true;
+
+      gameState.game1Current++;
+      document.getElementById('harvestedCounter').innerText = gameState.game1Current;
+
+      // Spoken count for young learners
+      speakText(`${gameState.game1Current}`);
+
+      if (gameState.game1Current === gameState.game1Target) {
+        setTimeout(() => {
+          triggerConfetti();
+          addStars(3);
+          speakText("ممتاز ورائع جداً! جمعت العدد المطلوب من خيرات وطننا الحبيب!");
+          setTimeout(checkTotalVictory, 1500);
+        }, 500);
+      }
+    }
+
+    /* ==========================================================================
+       3. GAME 2: NATIONAL SYMBOLS MATCHING (Visual memory, 3 Pairs)
+       ========================================================================== */
+    const nationalCards = [
+      { id: 'flag', icon: '🇸🇦', name: 'علم المملكة العربية السعودية' },
+      { id: 'falcon', icon: '🦅', name: 'الصقر السعودي' },
+      { id: 'coffee', icon: '☕', name: 'فنجان القهوة السعودية' }
+    ];
+
+    function initMatchGame() {
+      gameState.matchedPairs = 0;
+      gameState.flippedCards = [];
+      gameState.isLockBoard = false;
+
+      const deck = [...nationalCards, ...nationalCards].sort(() => Math.random() - 0.5);
+
+      const grid = document.getElementById('cardsGrid');
+      grid.innerHTML = '';
+
+      deck.forEach((item) => {
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'perspective-1000 w-full h-24 sm:h-32 cursor-pointer';
+
+        cardContainer.innerHTML = `
+          <div class="card-inner w-full h-full shadow-lg rounded-2xl" data-id="${item.id}" data-name="${item.name}">
+            <div class="card-front bg-gradient-to-tr from-emerald-600 to-green-500 border-4 border-yellow-300 flex flex-col items-center justify-center text-white">
+              <span class="text-3xl sm:text-4xl">🌟</span>
+              <span class="text-xs font-black mt-1">المس هنا</span>
+            </div>
+            <div class="card-back bg-white border-4 border-emerald-500 flex flex-col items-center justify-center">
+              <span class="text-4xl sm:text-5xl filter drop-shadow">${item.icon}</span>
+            </div>
+          </div>
+        `;
+
+        cardContainer.onclick = () => flipCard(cardContainer.querySelector('.card-inner'));
+        grid.appendChild(cardContainer);
+      });
+
+      setTimeout(speakInstruction2, 300);
+    }
+
+    function speakInstruction2() {
+      speakText("يا ذكي! ابحث عن الصورتين المتشابهتين من رموز مملكتنا الغالية!");
+    }
+
+    function flipCard(cardInner) {
+      if (gameState.isLockBoard) return;
+      if (cardInner.classList.contains('flipped')) return;
+
+      playPopChime();
+      cardInner.classList.add('flipped');
+      gameState.flippedCards.push(cardInner);
+
+      if (gameState.flippedCards.length === 2) {
+        checkCardsMatch();
+      }
+    }
+
+    function checkCardsMatch() {
+      gameState.isLockBoard = true;
+      const [card1, card2] = gameState.flippedCards;
+      const isMatch = card1.dataset.id === card2.dataset.id;
+
+      if (isMatch) {
+        gameState.matchedPairs++;
+        playSuccessChime();
+        triggerConfetti();
+
+        speakText(`أحسنت! ${card1.dataset.name}!`);
+
+        card1.parentElement.classList.add('pointer-events-none');
+        card2.parentElement.classList.add('pointer-events-none');
+
+        gameState.flippedCards = [];
+        gameState.isLockBoard = false;
+
+        if (gameState.matchedPairs === 3) {
+          addStars(3);
+          setTimeout(() => {
+            speakText("رائع جداً يا بطل! أنهيت مطابقة رموز الوطن بامتياز!");
+            setTimeout(checkTotalVictory, 1500);
+          }, 700);
+        }
+      } else {
+        setTimeout(() => {
+          card1.classList.remove('flipped');
+          card2.classList.remove('flipped');
+          gameState.flippedCards = [];
+          gameState.isLockBoard = false;
+        }, 900);
+      }
+    }
+
+    /* ==========================================================================
+       4. GAME 3: SAUDI GREEN INITIATIVE (Touch & Bloom Across the Desert)
+       ========================================================================== */
+    const plantIcons = ['🌴', '🌳', '🌻', '🌸', '🌿', '🌱', '🌵', '🌺'];
+
+    function initPlantingGame() {
+      gameState.plantedCount = 0;
+      document.getElementById('plantedCount').innerText = '0';
+
+      const grid = document.getElementById('plantingSpotsGrid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 8; i++) {
+        const spot = document.createElement('div');
+        spot.className = 'w-full h-full rounded-2xl border-2 border-dashed border-amber-400/80 bg-amber-50/50 hover:bg-emerald-100/50 flex flex-col items-center justify-center transition-all cursor-pointer group active:scale-95';
+        spot.dataset.planted = "false";
+        spot.dataset.icon = plantIcons[i % plantIcons.length];
+
+        spot.innerHTML = `
+          <div class="text-3xl text-amber-600/60 group-hover:scale-110 transition-transform">💧</div>
+          <span class="text-[10px] font-bold text-amber-800">ازرعني</span>
+        `;
+
+        spot.onclick = () => plantSpot(spot);
+        grid.appendChild(spot);
+      }
+
+      setTimeout(speakInstruction3, 300);
+    }
+
+    function speakInstruction3() {
+      speakText("المس الأماكن لتسقيها وتزرع الأشجار والأزهار ونجعل السعودية خضراء وجميلة!");
+    }
+
+    function plantSpot(spot) {
+      if (spot.dataset.planted === "true") return;
+
+      spot.dataset.planted = "true";
+      gameState.plantedCount++;
+      document.getElementById('plantedCount').innerText = gameState.plantedCount;
+
+      playPopChime();
+
+      spot.className = 'w-full h-full rounded-2xl border-2 border-emerald-500 bg-emerald-100 flex flex-col items-center justify-center transition-all shadow-md';
+      spot.innerHTML = `
+        <div class="text-4xl sm:text-5xl bounce-gentle">${spot.dataset.icon}</div>
+        <span class="text-xs font-black text-emerald-800 mt-1">ما شاء الله</span>
+      `;
+
+      if (gameState.plantedCount === 8) {
+        triggerConfetti();
+        addStars(4);
+        speakText("عاشت بلادي خضراء وجميلة! أحسنت صنعاً يا بطل البيئة والوطن!");
+        setTimeout(checkTotalVictory, 1500);
+      }
+    }
+
+    function startGame(gameNumber) {
+      getAudioContext();
+      if (window.speechSynthesis && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+
+      if (gameNumber === 1) {
+        showScreen('screen-game-1');
+        initHarvestGame();
+      } else if (gameNumber === 2) {
+        showScreen('screen-game-2');
+        initMatchGame();
+      } else if (gameNumber === 3) {
+        showScreen('screen-game-3');
+        initPlantingGame();
+      }
+    }
+
+    function checkTotalVictory() {
+      const modal = document.getElementById('celebrationModal');
+      modal.classList.remove('hidden');
+      playFanfare();
+      triggerConfetti();
+
+      speakText("مبارك يا بطل الطفولة المبكرة بابتدائية داود بن عروة الثقفي! المعلمة بهية محمد شنيمر فخورة جداً بإنجازك الرائع والمتميز!");
+    }
+
+    function closeModalAndHome() {
+      document.getElementById('celebrationModal').classList.add('hidden');
+      returnToHome();
+    }
+
+    // Force preloading voices across all browsers on load
+    window.addEventListener('load', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
+    });
+
+    // Unlock audio context on the first user touch anywhere on screen
+    document.addEventListener('touchstart', function unlockAudioOnFirstTouch() {
+      getAudioContext();
+      document.removeEventListener('touchstart', unlockAudioOnFirstTouch);
+    }, { once: true });
+
+    document.addEventListener('click', function unlockAudioOnFirstClick() {
+      getAudioContext();
+      document.removeEventListener('click', unlockAudioOnFirstClick);
+    }, { once: true });
+  </script>
+</body>
+</html>
